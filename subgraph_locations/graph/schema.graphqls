@@ -1,0 +1,25 @@
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
+
+type Query {
+  "The details of a specific location"
+  location(id: ID!): Location
+}
+
+type Location @key(fields: "id") {
+  "hack concatenation of lat & long"
+  id: ID!
+  "The latitude of the location"
+  latitude: Float @shareable
+  "The longitude of the location"
+  longitude: Float @shareable
+  "The label of the location"
+  label: String!
+  "The postal code of the location"
+  postalCode: String
+  "The locality of the location"
+  locality: String
+  "The county of the location"
+  county: String
+  "The continent of the location"
+  continent: String
+}
