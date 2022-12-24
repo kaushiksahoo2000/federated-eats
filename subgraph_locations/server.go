@@ -21,7 +21,7 @@ const defaultPort = "8080"
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	positionstackAccessKey := os.Getenv("POSITIONSTACK_ACCESS_KEY")

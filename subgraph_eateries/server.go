@@ -21,7 +21,7 @@ const defaultPort = "8081"
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file")
 	}
 
 	yelpApiKey := os.Getenv("YELP_API_KEY")
