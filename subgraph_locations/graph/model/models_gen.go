@@ -10,9 +10,7 @@ type Location struct {
 	// The longitude of the location
 	Longitude *float64 `json:"longitude"`
 	// The label of the location
-	Label string `json:"label"`
-	// The postal code of the location
-	PostalCode *string `json:"postalCode"`
+	Label *string `json:"label"`
 	// The locality of the location
 	Locality *string `json:"locality"`
 	// The county of the location

@@ -17,7 +17,7 @@ type Eatery {
   location: Location @provides(fields: "latitude longitude")
 }
 
-type Location @key(fields: "id") {
+type Location @key(fields: "id latitude longitude") {
   "hack concatenation of lat & long"
   id: ID!
   "The latitude of the location"

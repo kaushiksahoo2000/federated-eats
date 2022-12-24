@@ -46,18 +46,17 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Entity struct {
-		FindLocationByID func(childComplexity int, id string) int
+		FindLocationByIDAndLatitudeAndLongitude func(childComplexity int, id string, latitude *float64, longitude *float64) int
 	}
 
 	Location struct {
-		Continent  func(childComplexity int) int
-		County     func(childComplexity int) int
-		ID         func(childComplexity int) int
-		Label      func(childComplexity int) int
-		Latitude   func(childComplexity int) int
-		Locality   func(childComplexity int) int
-		Longitude  func(childComplexity int) int
-		PostalCode func(childComplexity int) int
+		Continent func(childComplexity int) int
+		County    func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Label     func(childComplexity int) int
+		Latitude  func(childComplexity int) int
+		Locality  func(childComplexity int) int
+		Longitude func(childComplexity int) int
 	}
 
 	Query struct {
@@ -72,7 +71,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
-	FindLocationByID(ctx context.Context, id string) (*model.Location, error)
+	FindLocationByIDAndLatitudeAndLongitude(ctx context.Context, id string, latitude *float64, longitude *float64) (*model.Location, error)
 }
 type QueryResolver interface {
 	Location(ctx context.Context, id string) (*model.Location, error)
@@ -93,17 +92,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
-	case "Entity.findLocationByID":
-		if e.complexity.Entity.FindLocationByID == nil {
+	case "Entity.findLocationByIDAndLatitudeAndLongitude":
+		if e.complexity.Entity.FindLocationByIDAndLatitudeAndLongitude == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findLocationByID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Entity_findLocationByIDAndLatitudeAndLongitude_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindLocationByID(childComplexity, args["id"].(string)), true
+		return e.complexity.Entity.FindLocationByIDAndLatitudeAndLongitude(childComplexity, args["id"].(string), args["latitude"].(*float64), args["longitude"].(*float64)), true
 
 	case "Location.continent":
 		if e.complexity.Location.Continent == nil {
@@ -153,13 +152,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Location.Longitude(childComplexity), true
-
-	case "Location.postalCode":
-		if e.complexity.Location.PostalCode == nil {
-			break
-		}
-
-		return e.complexity.Location.PostalCode(childComplexity), true
 
 	case "Query.location":
 		if e.complexity.Query.Location == nil {
@@ -258,7 +250,7 @@ type Query {
   location(id: ID!): Location
 }
 
-type Location @key(fields: "id") {
+type Location @key(fields: "id latitude longitude") {
   "hack concatenation of lat & long"
   id: ID!
   "The latitude of the location"
@@ -266,9 +258,7 @@ type Location @key(fields: "id") {
   "The longitude of the location"
   longitude: Float @shareable
   "The label of the location"
-  label: String!
-  "The postal code of the location"
-  postalCode: String
+  label: String
   "The locality of the location"
   locality: String
   "The county of the location"
@@ -298,7 +288,7 @@ union _Entity = Location
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findLocationByID(id: ID!,): Location!
+		findLocationByIDAndLatitudeAndLongitude(id: ID!,latitude: Float,longitude: Float,): Location!
 
 }
 
@@ -318,7 +308,7 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Entity_findLocationByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findLocationByIDAndLatitudeAndLongitude_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -330,6 +320,24 @@ func (ec *executionContext) field_Entity_findLocationByID_args(ctx context.Conte
 		}
 	}
 	args["id"] = arg0
+	var arg1 *float64
+	if tmp, ok := rawArgs["latitude"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("latitude"))
+		arg1, err = ec.unmarshalOFloat2ᚖfloat64(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["latitude"] = arg1
+	var arg2 *float64
+	if tmp, ok := rawArgs["longitude"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("longitude"))
+		arg2, err = ec.unmarshalOFloat2ᚖfloat64(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["longitude"] = arg2
 	return args, nil
 }
 
@@ -416,8 +424,8 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Entity_findLocationByID(ctx, field)
+func (ec *executionContext) _Entity_findLocationByIDAndLatitudeAndLongitude(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findLocationByIDAndLatitudeAndLongitude(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -430,7 +438,7 @@ func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindLocationByID(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Entity().FindLocationByIDAndLatitudeAndLongitude(rctx, fc.Args["id"].(string), fc.Args["latitude"].(*float64), fc.Args["longitude"].(*float64))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -447,7 +455,7 @@ func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field 
 	return ec.marshalNLocation2ᚖsubgraph_locationsᚋgraphᚋmodelᚐLocation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Entity_findLocationByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Entity_findLocationByIDAndLatitudeAndLongitude(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Entity",
 		Field:      field,
@@ -463,8 +471,6 @@ func (ec *executionContext) fieldContext_Entity_findLocationByID(ctx context.Con
 				return ec.fieldContext_Location_longitude(ctx, field)
 			case "label":
 				return ec.fieldContext_Location_label(ctx, field)
-			case "postalCode":
-				return ec.fieldContext_Location_postalCode(ctx, field)
 			case "locality":
 				return ec.fieldContext_Location_locality(ctx, field)
 			case "county":
@@ -482,7 +488,7 @@ func (ec *executionContext) fieldContext_Entity_findLocationByID(ctx context.Con
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Entity_findLocationByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Entity_findLocationByIDAndLatitudeAndLongitude_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -636,50 +642,6 @@ func (ec *executionContext) _Location_label(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Location_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Location",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Location_postalCode(ctx context.Context, field graphql.CollectedField, obj *model.Location) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Location_postalCode(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PostalCode, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
 		return graphql.Null
 	}
 	res := resTmp.(*string)
@@ -687,7 +649,7 @@ func (ec *executionContext) _Location_postalCode(ctx context.Context, field grap
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Location_postalCode(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Location_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Location",
 		Field:      field,
@@ -867,8 +829,6 @@ func (ec *executionContext) fieldContext_Query_location(ctx context.Context, fie
 				return ec.fieldContext_Location_longitude(ctx, field)
 			case "label":
 				return ec.fieldContext_Location_label(ctx, field)
-			case "postalCode":
-				return ec.fieldContext_Location_postalCode(ctx, field)
 			case "locality":
 				return ec.fieldContext_Location_locality(ctx, field)
 			case "county":
@@ -2982,7 +2942,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
-		case "findLocationByID":
+		case "findLocationByIDAndLatitudeAndLongitude":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -2991,7 +2951,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findLocationByID(ctx, field)
+				res = ec._Entity_findLocationByIDAndLatitudeAndLongitude(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3044,13 +3004,6 @@ func (ec *executionContext) _Location(ctx context.Context, sel ast.SelectionSet,
 		case "label":
 
 			out.Values[i] = ec._Location_label(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "postalCode":
-
-			out.Values[i] = ec._Location_postalCode(ctx, field, obj)
 
 		case "locality":
 
