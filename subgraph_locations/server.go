@@ -25,15 +25,21 @@ func main() {
 	}
 
 	positionstackAccessKey := os.Getenv("POSITIONSTACK_ACCESS_KEY")
-
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
 	}
+	defaultUrl := fmt.Sprintf("http://localhost:%s", port)
+	url := os.Getenv("RAILWAY_STATIC_URL")
+	if url == "" {
+		url = defaultUrl
+	} else {
+		url = fmt.Sprintf("https://%s", url)
+	}
 
 	router := chi.NewRouter()
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:" + port, "https://studio.apollographql.com"},
+		AllowedOrigins:   []string{defaultUrl, "https://studio.apollographql.com"},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
@@ -52,13 +58,13 @@ func main() {
 		target: "#sandbox",
 		// Pass through your server href if you are embedding on an endpoint.
 		// Otherwise, you can pass whatever endpoint you want Sandbox to start up with here.
-		initialEndpoint: "http://localhost:%s/graphql",
+		initialEndpoint: "%s/graphql",
 		});
 		// advanced options: https://www.apollographql.com/docs/studio/explorer/sandbox#embedding-sandbox
 		</script>
 		</body>
 		
-		</html>`, port))
+		</html>`, url))
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{RestyClient: client, PositionstackAccessKey: positionstackAccessKey}}))
 
@@ -68,7 +74,7 @@ func main() {
 	}))
 	router.Handle("/graphql", srv)
 
-	log.Printf("connect to http://localhost:%s/playground for GraphQL playground", port)
-	log.Printf("connect to http://localhost:%s/sandbox for Apollo Studio Sandbox", port)
+	log.Printf("connect to %s/playground for GraphQL playground", url)
+	log.Printf("connect to %s/sandbox for Apollo Studio Sandbox", url)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }

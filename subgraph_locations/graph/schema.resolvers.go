@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"subgraph_locations/graph/generated"
 	"subgraph_locations/graph/model"
@@ -37,7 +36,6 @@ func (r *queryResolver) Location(ctx context.Context, id string) (*model.Locatio
 	}
 	jsonData := jsonMap["data"].([]interface{})
 	locationData := jsonData[0].(map[string]interface{})
-	fmt.Printf("locationData: %v\n", locationData)
 
 	latitude := locationData["latitude"].(float64)
 	longitude := locationData["longitude"].(float64)
