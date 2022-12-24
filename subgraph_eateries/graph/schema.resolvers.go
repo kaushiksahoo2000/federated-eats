@@ -15,11 +15,6 @@ import (
 
 // EateriesForLocation is the resolver for the eateriesForLocation field.
 func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.Location) ([]*model.Eatery, error) {
-	fmt.Printf("INSIDE EATERIES FOR LOCATION: %v\n", obj)
-	fmt.Printf("obj: %v\n", obj)
-	fmt.Println("AFTER obj:")
-	fmt.Printf("OBJ.LATITUDE: %v\n", *obj.Latitude)
-	fmt.Printf("OBJ.LONGITUDE: %v\n", *obj.Longitude)
 	bs := &yfusion.BusinessSearchParams{}
 	bs.SetLatitude(*obj.Latitude)
 	bs.SetLongitude(*obj.Longitude)
@@ -32,7 +27,6 @@ func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.L
 
 	eateries := []*model.Eatery{}
 	for _, b := range result.Businesses {
-		fmt.Printf("Name: %s, Longitude: %f, Latitude: %f, Price: %s, Distance: %f, Rating: %f, ID: %s\n", b.Name, b.Coordinates.Longitude, b.Coordinates.Latitude, b.Price, b.Distance, b.Rating, b.ID)
 		rating := b.Rating
 		eateries = append(eateries, &model.Eatery{
 			ID:     b.ID,
@@ -46,14 +40,12 @@ func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.L
 
 // Eatery is the resolver for the eatery field.
 func (r *queryResolver) Eatery(ctx context.Context, id string) (*model.Eatery, error) {
-	fmt.Printf("INSIDE EATERY: %v\n", id)
 	result, err := r.YelpClient.SearchBusinessDetails(id)
 	if err != nil {
 		log.Printf("Eatery ERROR: failed to search business details, %s", err.Error())
 		return nil, err
 	}
-	fmt.Printf("result: %v\n", result)
-	fmt.Printf("id: %v\n", id)
+
 	return &model.Eatery{
 		ID:     id,
 		Name:   result.Name,
@@ -79,7 +71,6 @@ func (r *queryResolver) EateriesForCity(ctx context.Context, city string) ([]*mo
 
 	eateries := []*model.Eatery{}
 	for _, b := range result.Businesses {
-		fmt.Printf("Name: %s, Longitude: %f, Latitude: %f, Price: %s, Distance: %f, Rating: %f, ID: %s\n", b.Name, b.Coordinates.Longitude, b.Coordinates.Latitude, b.Price, b.Distance, b.Rating, b.ID)
 		rating := b.Rating
 		eateries = append(eateries, &model.Eatery{
 			ID:     b.ID,
