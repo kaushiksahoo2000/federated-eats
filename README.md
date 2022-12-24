@@ -8,7 +8,7 @@ Welcome to federated-eats! This is a small demo that's an example of a fullstack
 | Locations Subgraph | https://subgraph-locations.up.railway.app/sandbox |
 | Eateries Subgraph | https://subgraph-eateries.up.railway.app/sandbox |
 | Federated Eats Supergraph | https://main--federated-eats.apollographos.net/graphql , https://studio.apollographql.com/public/federated-eats/explorer?variant=main |
-| Demo | https://subgraph-eateries.up.railway.app/sandbox |
+| Complete Demo App | x |
 
 ## Local Development
 ```
