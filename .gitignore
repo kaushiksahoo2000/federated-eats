@@ -1,0 +1,8 @@
+*.env
+*.DS_Store
+/.vscode
+.idea/
+*.test
+*.out
+gqlgen
+*.exe

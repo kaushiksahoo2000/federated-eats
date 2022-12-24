@@ -1,0 +1,29 @@
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@provides", "@external"])
+
+type Query {
+  "Yelp details for an eatery based on yelp business id"
+  eatery(id: ID!): Eatery!
+  "Some eateries from Yelp for a given city"
+  eateriesForCity(city: String!): [Eatery]!
+}
+
+type Eatery {
+  id: ID!
+  "Name of eatery"
+  name: String!
+  "A number from 1 - 5 with 1 being lowest and 5 being highest (from Yelp)"
+  rating: Float
+  "The location of the eatery"
+  location: Location @provides(fields: "latitude longitude")
+}
+
+type Location @key(fields: "id") {
+  "hack concatenation of lat & long"
+  id: ID!
+  "The latitude of the location"
+  latitude: Float @external
+  "The longitude of the location"
+  longitude: Float @external
+  "Eateries from this location"
+  eateriesForLocation: [Eatery]!
+} 
