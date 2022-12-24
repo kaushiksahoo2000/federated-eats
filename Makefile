@@ -13,6 +13,11 @@ go-mod-tidy-locations: ## go mod tidy for subgraph_locations
 gqlgen-generate-locations: ## generate models/code based on schema for subgraph_locations
 	cd subgraph_locations && go run github.com/99designs/gqlgen generate
 
+.PHONY: rover-dev-locations
+rover-dev-locations: ## start a local Apollo Router that automatically composes the locations schema
+	rover dev --name locations --schema ./subgraph_locations/graph/schema.graphqls --url http://localhost:8080/graphql
+
+
 #########################
 ## EATERIES SUBGRAPH
 #########################
@@ -28,6 +33,10 @@ go-mod-tidy-eateries: ## go mod tidy for subgraph_eateries
 .PHONY: gqlgen-generate-eateries
 gqlgen-generate-eateries: ## generate models/code based on schema for subgraph_eateries
 	cd subgraph_eateries && go run github.com/99designs/gqlgen generate
+
+.PHONY: rover-dev-eateries
+rover-dev-eateries: ## start a local Apollo Router that automatically composes the eateries schema
+	rover dev --name eateries --schema ./subgraph_eateries/graph/schema.graphqls --url http://localhost:8081/graphql
 
 help: ## Display this help screen
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%30s\033[0m  %s\n", $$1, $$2}'

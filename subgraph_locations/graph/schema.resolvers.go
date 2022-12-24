@@ -42,19 +42,17 @@ func (r *queryResolver) Location(ctx context.Context, id string) (*model.Locatio
 	latitude := locationData["latitude"].(float64)
 	longitude := locationData["longitude"].(float64)
 	label := locationData["label"].(string)
-	postalCode := locationData["postal_code"].(string)
 	locality := locationData["locality"].(string)
 	county := locationData["county"].(string)
 	continent := locationData["continent"].(string)
 
 	return &model.Location{ID: id,
-		Latitude:   &latitude,
-		Longitude:  &longitude,
-		Label:      label,
-		PostalCode: &postalCode,
-		Locality:   &locality,
-		County:     &county,
-		Continent:  &continent,
+		Latitude:  &latitude,
+		Longitude: &longitude,
+		Label:     &label,
+		Locality:  &locality,
+		County:    &county,
+		Continent: &continent,
 	}, nil
 }
 

@@ -10,9 +10,17 @@ import (
 	"subgraph_eateries/graph/model"
 )
 
-// FindLocationByID is the resolver for the findLocationByID field.
-func (r *entityResolver) FindLocationByID(ctx context.Context, id string) (*model.Location, error) {
-	panic(fmt.Errorf("not implemented: FindLocationByID - findLocationByID"))
+// FindLocationByIDAndLatitudeAndLongitude is the resolver for the findLocationByIDAndLatitudeAndLongitude field.
+func (r *entityResolver) FindLocationByIDAndLatitudeAndLongitude(ctx context.Context, id string, latitude *float64, longitude *float64) (*model.Location, error) {
+	fmt.Printf("THIS IS ID: %v\n", id)
+	fmt.Printf("THIS IS latitude: %v\n", latitude)
+	fmt.Printf("THIS IS longitude: %v\n", longitude)
+	return &model.Location{
+		ID:        id,
+		Latitude:  latitude,
+		Longitude: longitude,
+	}, nil
+	// panic(fmt.Errorf("not implemented: FindLocationByIDAndLatitudeAndLongitude - findLocationByIDAndLatitudeAndLongitude"))
 }
 
 // Entity returns generated.EntityResolver implementation.

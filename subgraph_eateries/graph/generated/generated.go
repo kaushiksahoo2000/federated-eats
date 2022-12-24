@@ -54,7 +54,7 @@ type ComplexityRoot struct {
 	}
 
 	Entity struct {
-		FindLocationByID func(childComplexity int, id string) int
+		FindLocationByIDAndLatitudeAndLongitude func(childComplexity int, id string, latitude *float64, longitude *float64) int
 	}
 
 	Location struct {
@@ -77,7 +77,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
-	FindLocationByID(ctx context.Context, id string) (*model.Location, error)
+	FindLocationByIDAndLatitudeAndLongitude(ctx context.Context, id string, latitude *float64, longitude *float64) (*model.Location, error)
 }
 type LocationResolver interface {
 	EateriesForLocation(ctx context.Context, obj *model.Location) ([]*model.Eatery, error)
@@ -130,17 +130,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Eatery.Rating(childComplexity), true
 
-	case "Entity.findLocationByID":
-		if e.complexity.Entity.FindLocationByID == nil {
+	case "Entity.findLocationByIDAndLatitudeAndLongitude":
+		if e.complexity.Entity.FindLocationByIDAndLatitudeAndLongitude == nil {
 			break
 		}
 
-		args, err := ec.field_Entity_findLocationByID_args(context.TODO(), rawArgs)
+		args, err := ec.field_Entity_findLocationByIDAndLatitudeAndLongitude_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Entity.FindLocationByID(childComplexity, args["id"].(string)), true
+		return e.complexity.Entity.FindLocationByIDAndLatitudeAndLongitude(childComplexity, args["id"].(string), args["latitude"].(*float64), args["longitude"].(*float64)), true
 
 	case "Location.eateriesForLocation":
 		if e.complexity.Location.EateriesForLocation == nil {
@@ -291,7 +291,7 @@ type Eatery {
   location: Location @provides(fields: "latitude longitude")
 }
 
-type Location @key(fields: "id") {
+type Location @key(fields: "id latitude longitude") {
   "hack concatenation of lat & long"
   id: ID!
   "The latitude of the location"
@@ -324,7 +324,7 @@ union _Entity = Location
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findLocationByID(id: ID!,): Location!
+		findLocationByIDAndLatitudeAndLongitude(id: ID!,latitude: Float,longitude: Float,): Location!
 
 }
 
@@ -344,7 +344,7 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Entity_findLocationByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Entity_findLocationByIDAndLatitudeAndLongitude_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 string
@@ -356,6 +356,24 @@ func (ec *executionContext) field_Entity_findLocationByID_args(ctx context.Conte
 		}
 	}
 	args["id"] = arg0
+	var arg1 *float64
+	if tmp, ok := rawArgs["latitude"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("latitude"))
+		arg1, err = ec.unmarshalOFloat2ᚖfloat64(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["latitude"] = arg1
+	var arg2 *float64
+	if tmp, ok := rawArgs["longitude"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("longitude"))
+		arg2, err = ec.unmarshalOFloat2ᚖfloat64(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["longitude"] = arg2
 	return args, nil
 }
 
@@ -637,8 +655,8 @@ func (ec *executionContext) fieldContext_Eatery_location(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Entity_findLocationByID(ctx, field)
+func (ec *executionContext) _Entity_findLocationByIDAndLatitudeAndLongitude(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findLocationByIDAndLatitudeAndLongitude(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -651,7 +669,7 @@ func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Entity().FindLocationByID(rctx, fc.Args["id"].(string))
+		return ec.resolvers.Entity().FindLocationByIDAndLatitudeAndLongitude(rctx, fc.Args["id"].(string), fc.Args["latitude"].(*float64), fc.Args["longitude"].(*float64))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -668,7 +686,7 @@ func (ec *executionContext) _Entity_findLocationByID(ctx context.Context, field 
 	return ec.marshalNLocation2ᚖsubgraph_eateriesᚋgraphᚋmodelᚐLocation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Entity_findLocationByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Entity_findLocationByIDAndLatitudeAndLongitude(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Entity",
 		Field:      field,
@@ -695,7 +713,7 @@ func (ec *executionContext) fieldContext_Entity_findLocationByID(ctx context.Con
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Entity_findLocationByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Entity_findLocationByIDAndLatitudeAndLongitude_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -3144,7 +3162,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
-		case "findLocationByID":
+		case "findLocationByIDAndLatitudeAndLongitude":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -3153,7 +3171,7 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Entity_findLocationByID(ctx, field)
+				res = ec._Entity_findLocationByIDAndLatitudeAndLongitude(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

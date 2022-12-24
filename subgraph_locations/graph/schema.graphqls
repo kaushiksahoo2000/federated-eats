@@ -5,7 +5,7 @@ type Query {
   location(id: ID!): Location
 }
 
-type Location @key(fields: "id") {
+type Location @key(fields: "id latitude longitude") {
   "hack concatenation of lat & long"
   id: ID!
   "The latitude of the location"
@@ -13,9 +13,7 @@ type Location @key(fields: "id") {
   "The longitude of the location"
   longitude: Float @shareable
   "The label of the location"
-  label: String!
-  "The postal code of the location"
-  postalCode: String
+  label: String
   "The locality of the location"
   locality: String
   "The county of the location"

@@ -87,12 +87,20 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			}
 			switch resolverName {
 
-			case "findLocationByID":
+			case "findLocationByIDAndLatitudeAndLongitude":
 				id0, err := ec.unmarshalNID2string(ctx, rep["id"])
 				if err != nil {
-					return fmt.Errorf(`unmarshalling param 0 for findLocationByID(): %w`, err)
+					return fmt.Errorf(`unmarshalling param 0 for findLocationByIDAndLatitudeAndLongitude(): %w`, err)
 				}
-				entity, err := ec.resolvers.Entity().FindLocationByID(ctx, id0)
+				id1, err := ec.unmarshalOFloat2ᚖfloat64(ctx, rep["latitude"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 1 for findLocationByIDAndLatitudeAndLongitude(): %w`, err)
+				}
+				id2, err := ec.unmarshalOFloat2ᚖfloat64(ctx, rep["longitude"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 2 for findLocationByIDAndLatitudeAndLongitude(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindLocationByIDAndLatitudeAndLongitude(ctx, id0, id1, id2)
 				if err != nil {
 					return fmt.Errorf(`resolving Entity "Location": %w`, err)
 				}
@@ -181,7 +189,15 @@ func entityResolverNameForLocation(ctx context.Context, rep map[string]interface
 		if _, ok = m["id"]; !ok {
 			break
 		}
-		return "findLocationByID", nil
+		m = rep
+		if _, ok = m["latitude"]; !ok {
+			break
+		}
+		m = rep
+		if _, ok = m["longitude"]; !ok {
+			break
+		}
+		return "findLocationByIDAndLatitudeAndLongitude", nil
 	}
 	return "", fmt.Errorf("%w for Location", ErrTypeNotFound)
 }

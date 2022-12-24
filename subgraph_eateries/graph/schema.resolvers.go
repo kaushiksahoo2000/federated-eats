@@ -15,7 +15,11 @@ import (
 
 // EateriesForLocation is the resolver for the eateriesForLocation field.
 func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.Location) ([]*model.Eatery, error) {
+	fmt.Printf("INSIDE EATERIES FOR LOCATION: %v\n", obj)
 	fmt.Printf("obj: %v\n", obj)
+	fmt.Println("AFTER obj:")
+	fmt.Printf("OBJ.LATITUDE: %v\n", *obj.Latitude)
+	fmt.Printf("OBJ.LONGITUDE: %v\n", *obj.Longitude)
 	bs := &yfusion.BusinessSearchParams{}
 	bs.SetLatitude(*obj.Latitude)
 	bs.SetLongitude(*obj.Longitude)
@@ -42,6 +46,7 @@ func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.L
 
 // Eatery is the resolver for the eatery field.
 func (r *queryResolver) Eatery(ctx context.Context, id string) (*model.Eatery, error) {
+	fmt.Printf("INSIDE EATERY: %v\n", id)
 	result, err := r.YelpClient.SearchBusinessDetails(id)
 	if err != nil {
 		log.Printf("Eatery ERROR: failed to search business details, %s", err.Error())
