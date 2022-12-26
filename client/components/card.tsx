@@ -1,7 +1,22 @@
 import React from 'react'
+import Link from 'next/link'
 
-const Card = ({ name, rating, id }: { name?: string; rating?: number; id?: string }) => {
-  console.log(name, rating, id)
+const Card = ({
+  name,
+  rating,
+  id,
+  URL,
+  reviewCount,
+  distance,
+}: {
+  name?: string
+  rating?: number
+  id?: string
+  URL?: string
+  reviewCount?: number
+  distance?: number
+}) => {
+  // console.log({ name, rating, id, URL, reviewCount, distance })
   return (
     <a className="relative block rounded-xl border border-gray-100 p-8 shadow-xl" href="">
       <span className="absolute right-4 top-4 rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600">{rating}</span>
@@ -15,10 +30,17 @@ const Card = ({ name, rating, id }: { name?: string; rating?: number; id?: strin
             d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"
           ></path>
         </svg>
-
         <h3 className="mt-4 text-sm font-medium text-gray-900">{name}</h3>
-
         <p className="mt-2 hidden text-sm sm:block">Yelp Business ID: {id}</p>
+        <p className="mt-2 hidden text-sm sm:block">
+          <Link className="text-blue-600" target="_blank" href={URL}>
+            Yelp Business Page
+          </Link>{' '}
+        </p>
+        <div class="mt-4 flex flex-wrap gap-1">
+          <span class="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{reviewCount} reviews</span>
+          <span class="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{Math.round(distance)} meters away</span>
+        </div>
       </div>
     </a>
   )

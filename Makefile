@@ -1,4 +1,11 @@
 #########################
+## CLIENT
+#########################
+.PHONY: start-client
+start-client: ## Start local client dev server
+	cd client && npm run dev
+
+#########################
 ## LOCATIONS SUBGRAPH
 #########################
 .PHONY: start-locations-subgraph
