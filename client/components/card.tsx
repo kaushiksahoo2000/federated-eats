@@ -11,10 +11,10 @@ const Card = ({
 }: {
   name?: string
   rating?: number
-  id?: string
-  URL?: string
+  id: string
+  URL: string
   reviewCount?: number
-  distance?: number
+  distance: number
 }) => {
   // console.log({ name, rating, id, URL, reviewCount, distance })
   return (
