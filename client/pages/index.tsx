@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import { useEffect, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Card from '../components/card'
 import Link from 'next/link'
@@ -18,6 +19,9 @@ const QUERY = gql`
           name
           rating
           id
+          URL
+          reviewCount
+          distance
         }
       }
     }
@@ -25,9 +29,18 @@ const QUERY = gql`
 `
 
 const Home: NextPage = () => {
-  const dummydata = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  const { data, loading, error } = useQuery(QUERY, { variables: { locationId: '30.253508,-97.747888' } })
-  console.log({ data, loading, error })
+  const [latitude, setLatitude] = useState<number>()
+  const [longitude, setLongitude] = useState<number>()
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position?.coords?.latitude)
+      setLongitude(position?.coords?.longitude)
+    })
+  }, [])
+
+  const { data } = useQuery(QUERY, { variables: { locationId: `${latitude},${longitude}` } })
+  // console.log({ data })
   return (
     <>
       <section className="text-gray-700">
@@ -55,12 +68,17 @@ const Home: NextPage = () => {
             </div>
             <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
-              {/* {dummydata.map((x) => (
-                <Card />
-              ))} */}
               {data?.location?.eateriesForLocation
                 ? data?.location?.eateriesForLocation.map((eatery) => (
-                    <Card key={eatery?.id} id={eatery?.id} name={eatery?.name} rating={eatery?.rating} />
+                    <Card
+                      key={eatery?.id}
+                      id={eatery?.id}
+                      name={eatery?.name}
+                      rating={eatery?.rating}
+                      URL={eatery?.URL}
+                      reviewCount={eatery?.reviewCount}
+                      distance={eatery?.distance}
+                    />
                   ))
                 : 'loading...'}
             </div>
