@@ -15,7 +15,7 @@ const Card = () => {
           ></path>
         </svg>
 
-        <h3 class="mt-4 text-xl font-medium text-gray-900">Science of Chemistry</h3>
+        <h3 class="mt-4 text-sm font-medium text-gray-900">Science of Chemistry</h3>
 
         <p class="mt-2 hidden text-sm sm:block">Yelp Business ID: x</p>
       </div>

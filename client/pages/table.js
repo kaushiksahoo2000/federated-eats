@@ -34,12 +34,12 @@ const Table = () => {
           <tr>
             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Federated Eats Supergraph</td>
             <td className="whitespace-nowrap px-4 py-2 text-gray-700">
-              <Link className="text-blue-500" target="_blank" href={'https://subgraph-eateries.up.railway.app/sandbox'}>
-                https://subgraph-eateries.up.railway.app/sandbox
+              <Link className="text-blue-500" target="_blank" href={'https://main--federated-eats.apollographos.net/graphql'}>
+                https://main--federated-eats.apollographos.net/graphql
               </Link>
               {', '}
-              <Link className="text-blue-500" target="_blank" href={'https://subgraph-eateries.up.railway.app/sandbox'}>
-                https://subgraph-eateries.up.railway.app/sandbox
+              <Link className="text-blue-500" target="_blank" href={'https://studio.apollographql.com/public/federated-eats/explorer?variant=main'}>
+                https://studio.apollographql.com/public/federated-eats/explorer?variant=main
               </Link>
             </td>
           </tr>
