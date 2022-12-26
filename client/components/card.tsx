@@ -1,9 +1,10 @@
 import React from 'react'
 
-const Card = () => {
+const Card = ({ name, rating, id }: { name?: string; rating?: number; id?: string }) => {
+  console.log(name, rating, id)
   return (
     <a className="relative block rounded-xl border border-gray-100 p-8 shadow-xl" href="">
-      <span className="absolute right-4 top-4 rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600">4.3</span>
+      <span className="absolute right-4 top-4 rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600">{rating}</span>
 
       <div className="mt-4 text-gray-500 sm:pr-8">
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -15,9 +16,9 @@ const Card = () => {
           ></path>
         </svg>
 
-        <h3 className="mt-4 text-sm font-medium text-gray-900">Science of Chemistry</h3>
+        <h3 className="mt-4 text-sm font-medium text-gray-900">{name}</h3>
 
-        <p className="mt-2 hidden text-sm sm:block">Yelp Business ID: x</p>
+        <p className="mt-2 hidden text-sm sm:block">Yelp Business ID: {id}</p>
       </div>
     </a>
   )
