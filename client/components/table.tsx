@@ -3,8 +3,8 @@ import Link from 'next/link'
 
 const Table = () => {
   return (
-    <div className="max-w-xl">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
+    <div className="p-8 overflow-auto relative">
+      <table className="border-x border-b w-full divide-gray-200 text-sm">
         <thead className="bg-gray-100">
           <tr>
             <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">Graph</th>
