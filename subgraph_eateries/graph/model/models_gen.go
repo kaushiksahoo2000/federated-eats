@@ -8,6 +8,12 @@ type Eatery struct {
 	Name string `json:"name"`
 	// A number from 1 - 5 with 1 being lowest and 5 being highest (from Yelp)
 	Rating *float64 `json:"rating"`
+	// Distance of eatery
+	Distance *float64 `json:"distance"`
+	// Number of reviews for eatery
+	ReviewCount *int `json:"reviewCount"`
+	// Link for eatery
+	URL *string `json:"URL"`
 	// The location of the eatery
 	Location *Location `json:"location"`
 }

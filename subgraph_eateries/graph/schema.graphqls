@@ -13,6 +13,12 @@ type Eatery {
   name: String!
   "A number from 1 - 5 with 1 being lowest and 5 being highest (from Yelp)"
   rating: Float
+  "Distance of eatery in meters"
+  distance: Float
+  "Number of reviews for eatery"
+  reviewCount: Int
+  "Link to Yelp page for eatery"
+  URL: String
   "The location of the eatery"
   location: Location @provides(fields: "latitude longitude")
 }
