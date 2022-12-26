@@ -66,7 +66,6 @@ const Home: NextPage = () => {
               <p className="mt-4 text-sm text-gray-500">latitude - {data?.location?.latitude ? data?.location?.latitude : 'loading...'} </p>
               <p className="mt-4 text-sm text-gray-500">longitude - {data?.location?.longitude ? data?.location?.longitude : 'loading...'} </p>
             </div>
-            <Card key={'dddd'} id={'dddd'} name={'dddd'} rating={12} URL={'dddd'} reviewCount={12} distance={12} />
             <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
               {data?.location?.eateriesForLocation
