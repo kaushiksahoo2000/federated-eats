@@ -71,7 +71,7 @@ const Home: NextPage = () => {
               {data?.location?.eateriesForLocation
                 ? data?.location?.eateriesForLocation.map((eatery) => (
                     <Card
-                      key={'dddd'}
+                      key={eatery?.id}
                       id={eatery?.id}
                       name={eatery?.name}
                       rating={eatery?.rating}
