@@ -47,10 +47,13 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Eatery struct {
-		ID       func(childComplexity int) int
-		Location func(childComplexity int) int
-		Name     func(childComplexity int) int
-		Rating   func(childComplexity int) int
+		Distance    func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Location    func(childComplexity int) int
+		Name        func(childComplexity int) int
+		Rating      func(childComplexity int) int
+		ReviewCount func(childComplexity int) int
+		URL         func(childComplexity int) int
 	}
 
 	Entity struct {
@@ -102,6 +105,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "Eatery.distance":
+		if e.complexity.Eatery.Distance == nil {
+			break
+		}
+
+		return e.complexity.Eatery.Distance(childComplexity), true
+
 	case "Eatery.id":
 		if e.complexity.Eatery.ID == nil {
 			break
@@ -129,6 +139,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Eatery.Rating(childComplexity), true
+
+	case "Eatery.reviewCount":
+		if e.complexity.Eatery.ReviewCount == nil {
+			break
+		}
+
+		return e.complexity.Eatery.ReviewCount(childComplexity), true
+
+	case "Eatery.URL":
+		if e.complexity.Eatery.URL == nil {
+			break
+		}
+
+		return e.complexity.Eatery.URL(childComplexity), true
 
 	case "Entity.findLocationByIDAndLatitudeAndLongitude":
 		if e.complexity.Entity.FindLocationByIDAndLatitudeAndLongitude == nil {
@@ -287,6 +311,12 @@ type Eatery {
   name: String!
   "A number from 1 - 5 with 1 being lowest and 5 being highest (from Yelp)"
   rating: Float
+  "Distance of eatery"
+  distance: Float
+  "Number of reviews for eatery"
+  reviewCount: Int
+  "Link for eatery"
+  URL: String
   "The location of the eatery"
   location: Location @provides(fields: "latitude longitude")
 }
@@ -604,6 +634,129 @@ func (ec *executionContext) fieldContext_Eatery_rating(ctx context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _Eatery_distance(ctx context.Context, field graphql.CollectedField, obj *model.Eatery) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Eatery_distance(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Distance, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*float64)
+	fc.Result = res
+	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Eatery_distance(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Eatery",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Eatery_reviewCount(ctx context.Context, field graphql.CollectedField, obj *model.Eatery) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Eatery_reviewCount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ReviewCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Eatery_reviewCount(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Eatery",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Eatery_URL(ctx context.Context, field graphql.CollectedField, obj *model.Eatery) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Eatery_URL(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Eatery_URL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Eatery",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Eatery_location(ctx context.Context, field graphql.CollectedField, obj *model.Eatery) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Eatery_location(ctx, field)
 	if err != nil {
@@ -891,6 +1044,12 @@ func (ec *executionContext) fieldContext_Location_eateriesForLocation(ctx contex
 				return ec.fieldContext_Eatery_name(ctx, field)
 			case "rating":
 				return ec.fieldContext_Eatery_rating(ctx, field)
+			case "distance":
+				return ec.fieldContext_Eatery_distance(ctx, field)
+			case "reviewCount":
+				return ec.fieldContext_Eatery_reviewCount(ctx, field)
+			case "URL":
+				return ec.fieldContext_Eatery_URL(ctx, field)
 			case "location":
 				return ec.fieldContext_Eatery_location(ctx, field)
 			}
@@ -945,6 +1104,12 @@ func (ec *executionContext) fieldContext_Query_eatery(ctx context.Context, field
 				return ec.fieldContext_Eatery_name(ctx, field)
 			case "rating":
 				return ec.fieldContext_Eatery_rating(ctx, field)
+			case "distance":
+				return ec.fieldContext_Eatery_distance(ctx, field)
+			case "reviewCount":
+				return ec.fieldContext_Eatery_reviewCount(ctx, field)
+			case "URL":
+				return ec.fieldContext_Eatery_URL(ctx, field)
 			case "location":
 				return ec.fieldContext_Eatery_location(ctx, field)
 			}
@@ -1010,6 +1175,12 @@ func (ec *executionContext) fieldContext_Query_eateriesForCity(ctx context.Conte
 				return ec.fieldContext_Eatery_name(ctx, field)
 			case "rating":
 				return ec.fieldContext_Eatery_rating(ctx, field)
+			case "distance":
+				return ec.fieldContext_Eatery_distance(ctx, field)
+			case "reviewCount":
+				return ec.fieldContext_Eatery_reviewCount(ctx, field)
+			case "URL":
+				return ec.fieldContext_Eatery_URL(ctx, field)
 			case "location":
 				return ec.fieldContext_Eatery_location(ctx, field)
 			}
@@ -3128,6 +3299,18 @@ func (ec *executionContext) _Eatery(ctx context.Context, sel ast.SelectionSet, o
 
 			out.Values[i] = ec._Eatery_rating(ctx, field, obj)
 
+		case "distance":
+
+			out.Values[i] = ec._Eatery_distance(ctx, field, obj)
+
+		case "reviewCount":
+
+			out.Values[i] = ec._Eatery_reviewCount(ctx, field, obj)
+
+		case "URL":
+
+			out.Values[i] = ec._Eatery_URL(ctx, field, obj)
+
 		case "location":
 
 			out.Values[i] = ec._Eatery_location(ctx, field, obj)
@@ -4250,6 +4433,22 @@ func (ec *executionContext) marshalOFloat2ᚖfloat64(ctx context.Context, sel as
 	}
 	res := graphql.MarshalFloatContext(*v)
 	return graphql.WrapContextMarshaler(ctx, res)
+}
+
+func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalInt(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.SelectionSet, v *int) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	res := graphql.MarshalInt(*v)
+	return res
 }
 
 func (ec *executionContext) marshalOLocation2ᚖsubgraph_eateriesᚋgraphᚋmodelᚐLocation(ctx context.Context, sel ast.SelectionSet, v *model.Location) graphql.Marshaler {

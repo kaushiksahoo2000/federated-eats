@@ -28,10 +28,16 @@ func (r *locationResolver) EateriesForLocation(ctx context.Context, obj *model.L
 	eateries := []*model.Eatery{}
 	for _, b := range result.Businesses {
 		rating := b.Rating
+		distance := b.Distance
+		reviewCount := b.ReviewCount
+		url := b.URL
 		eateries = append(eateries, &model.Eatery{
-			ID:     b.ID,
-			Name:   b.Name,
-			Rating: &rating,
+			ID:          b.ID,
+			Name:        b.Name,
+			Rating:      &rating,
+			Distance:    &distance,
+			ReviewCount: &reviewCount,
+			URL:         &url,
 		})
 	}
 
@@ -47,9 +53,12 @@ func (r *queryResolver) Eatery(ctx context.Context, id string) (*model.Eatery, e
 	}
 
 	return &model.Eatery{
-		ID:     id,
-		Name:   result.Name,
-		Rating: &result.Rating,
+		ID:          id,
+		Name:        result.Name,
+		Rating:      &result.Rating,
+		Distance:    &result.Distance,
+		ReviewCount: &result.ReviewCount,
+		URL:         &result.URL,
 		Location: &model.Location{
 			ID:        fmt.Sprintf("%f%s%f", result.Coordinates.Latitude, ",", result.Coordinates.Longitude),
 			Latitude:  &result.Coordinates.Latitude,
@@ -72,10 +81,16 @@ func (r *queryResolver) EateriesForCity(ctx context.Context, city string) ([]*mo
 	eateries := []*model.Eatery{}
 	for _, b := range result.Businesses {
 		rating := b.Rating
+		distance := b.Distance
+		reviewCount := b.ReviewCount
+		url := b.URL
 		eateries = append(eateries, &model.Eatery{
-			ID:     b.ID,
-			Name:   b.Name,
-			Rating: &rating,
+			ID:          b.ID,
+			Name:        b.Name,
+			Rating:      &rating,
+			Distance:    &distance,
+			ReviewCount: &reviewCount,
+			URL:         &url,
 		})
 	}
 

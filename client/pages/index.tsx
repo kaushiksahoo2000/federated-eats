@@ -1,7 +1,6 @@
 import type { NextPage } from 'next'
 import { useQuery, gql } from '@apollo/client'
 import Card from '../components/card'
-import ClientOnly from '../apollo/client-only'
 import Link from 'next/link'
 import Table from '../components/table'
 
@@ -24,31 +23,10 @@ const QUERY = gql`
     }
   }
 `
-const SPACEX = gql`
-  query GetLaunches {
-    launchesPast(limit: 10) {
-      id
-      mission_name
-      launch_date_local
-      launch_site {
-        site_name_long
-      }
-      links {
-        article_link
-        video_link
-        mission_patch
-      }
-      rocket {
-        rocket_name
-      }
-    }
-  }
-`
 
 const Home: NextPage = () => {
   const dummydata = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   const { data, loading, error } = useQuery(QUERY, { variables: { locationId: '30.253508,-97.747888' } })
-  // const { data, loading, error } = useQuery(SPACEX)
   console.log({ data, loading, error })
   return (
     <>
@@ -66,24 +44,27 @@ const Home: NextPage = () => {
             </p>
           </div>
           <Table />
-          <ClientOnly>
-            <div className="space-y-10">
-              <div>
-                <h3 className="text-lg font-medium sm:text-lg">Some current location information via the supergraph 📍:</h3>
-                <p className="mt-4 text-sm text-gray-500">continent - </p>
-                <p className="mt-4 text-sm text-gray-500">county - </p>
-                <p className="mt-4 text-sm text-gray-500">label - </p>
-                <p className="mt-4 text-sm text-gray-500">latitude - </p>
-                <p className="mt-4 text-sm text-gray-500">longitude - </p>
-              </div>
-              <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
-              <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
-                {dummydata.map((x) => (
-                  <Card />
-                ))}
-              </div>
+          <div className="space-y-10">
+            <div>
+              <h3 className="text-lg font-medium sm:text-lg">Some current location information via the supergraph 📍:</h3>
+              <p className="mt-4 text-sm text-gray-500">continent - {data?.location?.continent ? data?.location?.continent : 'loading...'} </p>
+              <p className="mt-4 text-sm text-gray-500">county - {data?.location?.county ? data?.location?.county : 'loading...'} </p>
+              <p className="mt-4 text-sm text-gray-500">label - {data?.location?.label ? data?.location?.label : 'loading...'} </p>
+              <p className="mt-4 text-sm text-gray-500">latitude - {data?.location?.latitude ? data?.location?.latitude : 'loading...'} </p>
+              <p className="mt-4 text-sm text-gray-500">longitude - {data?.location?.longitude ? data?.location?.longitude : 'loading...'} </p>
             </div>
-          </ClientOnly>
+            <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
+            <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
+              {/* {dummydata.map((x) => (
+                <Card />
+              ))} */}
+              {data?.location?.eateriesForLocation
+                ? data?.location?.eateriesForLocation.map((eatery) => (
+                    <Card key={eatery?.id} id={eatery?.id} name={eatery?.name} rating={eatery?.rating} />
+                  ))
+                : 'loading...'}
+            </div>
+          </div>
         </div>
       </section>
     </>
