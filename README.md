@@ -8,7 +8,7 @@ Welcome to federated-eats! This is a small demo that's an example of a fullstack
 | Locations Subgraph | https://subgraph-locations.up.railway.app/sandbox |
 | Eateries Subgraph | https://subgraph-eateries.up.railway.app/sandbox |
 | Federated Eats Supergraph | https://main--federated-eats.apollographos.net/graphql , https://studio.apollographql.com/public/federated-eats/explorer?variant=main |
-| Complete Demo App | x |
+| Complete Demo App | https://federated-eats.vercel.app/ |
 
 ## Local Development
 ```
@@ -16,11 +16,13 @@ $ make help
 
           go-mod-tidy-eateries  go mod tidy for subgraph_eateries
          go-mod-tidy-locations  go mod tidy for subgraph_locations
-      gqlgen-generate-eateries  generate models/code based on schema for subgraph_eateries
-     gqlgen-generate-locations  generate models/code based on schema for subgraph_locations
+      gqlgen-generate-eateries  Generate models/code based on schema for subgraph_eateries
+     gqlgen-generate-locations  Generate models/code based on schema for subgraph_locations
                           help  Display this help screen
-            rover-dev-eateries  start a local Apollo Router that automatically composes the eateries schema
-           rover-dev-locations  start a local Apollo Router that automatically composes the locations schema
+              print-needed-env  Print env variables you must add
+            rover-dev-eateries  Start a local Apollo Router that automatically composes the eateries schema
+           rover-dev-locations  Start a local Apollo Router that automatically composes the locations schema
+                  start-client  Start local client dev server
        start-eateries-subgraph  Start the eateries subgraph server
       start-locations-subgraph  Start the locations subgraph server
 ```

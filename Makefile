@@ -2,7 +2,7 @@
 ## ENV
 #########################
 .PHONY: print-needed-env
-print-env: ## Print env variables you must add 
+print-needed-env: ## Print env variables you must add 
 	@echo 'check env.example files in subgraph_locations and subgraph_eateries'
 	@echo 'POSITIONSTACK_ACCESS_KEY=xyz'
 	@echo 'YELP_API_KEY=xyz'
@@ -55,4 +55,4 @@ rover-dev-eateries: ## start a local Apollo Router that automatically composes t
 	rover dev --name eateries --schema ./subgraph_eateries/graph/schema.graphqls --url http://localhost:8081/graphql
 
 help: ## Display this help screen
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%30s\033[0m  %s\n", $$1, $$2}
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%30s\033[0m  %s\n", $$1, $$2}'
