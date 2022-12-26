@@ -7,7 +7,7 @@ import Table from '../components/table'
 
 const QUERY = gql`
   query ($locationId: ID!) {
-    ipLocation(id: $locationId) {
+    location(id: $locationId) {
       continent
       locality
       county
@@ -47,8 +47,8 @@ const SPACEX = gql`
 
 const Home: NextPage = () => {
   const dummydata = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  // const { data, loading, error } = useQuery(QUERY)
-  const { data, loading, error } = useQuery(SPACEX)
+  const { data, loading, error } = useQuery(QUERY, { variables: { locationId: '30.253508,-97.747888' } })
+  // const { data, loading, error } = useQuery(SPACEX)
   console.log({ data, loading, error })
   return (
     <>
