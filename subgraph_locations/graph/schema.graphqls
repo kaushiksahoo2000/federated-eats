@@ -20,4 +20,5 @@ type Location @key(fields: "id latitude longitude") {
   county: String
   "The continent of the location"
   continent: String
+  testfield: String
 }
