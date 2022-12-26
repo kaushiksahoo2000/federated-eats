@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import { useEffect, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Card from '../components/card'
 import Link from 'next/link'
@@ -28,7 +29,18 @@ const QUERY = gql`
 `
 
 const Home: NextPage = () => {
-  const { data, loading, error } = useQuery(QUERY, { variables: { locationId: '30.253508,-97.747888' } })
+  const [latitude, setLatitude] = useState<number>()
+  const [longitude, setLongitude] = useState<number>()
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position?.coords?.latitude)
+      setLongitude(position?.coords?.longitude)
+    })
+  }, [])
+
+  const { data } = useQuery(QUERY, { variables: { locationId: `${latitude},${longitude}` } })
+  // console.log({ data })
   return (
     <>
       <section className="text-gray-700">
@@ -54,12 +66,13 @@ const Home: NextPage = () => {
               <p className="mt-4 text-sm text-gray-500">latitude - {data?.location?.latitude ? data?.location?.latitude : 'loading...'} </p>
               <p className="mt-4 text-sm text-gray-500">longitude - {data?.location?.longitude ? data?.location?.longitude : 'loading...'} </p>
             </div>
+            <Card key={'dddd'} id={'dddd'} name={'dddd'} rating={12} URL={'dddd'} reviewCount={12} distance={12} />
             <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
               {data?.location?.eateriesForLocation
                 ? data?.location?.eateriesForLocation.map((eatery) => (
                     <Card
-                      key={eatery?.id}
+                      key={'dddd'}
                       id={eatery?.id}
                       name={eatery?.name}
                       rating={eatery?.rating}

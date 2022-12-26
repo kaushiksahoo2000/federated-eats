@@ -18,7 +18,7 @@ const Card = ({
 }) => {
   // console.log({ name, rating, id, URL, reviewCount, distance })
   return (
-    <a className="relative block rounded-xl border border-gray-100 p-8 shadow-xl" href="">
+    <div className="relative block rounded-xl border border-gray-100 p-8 shadow-xl">
       <span className="absolute right-4 top-4 rounded-full bg-green-100 px-3 py-1.5 text-xs font-medium text-green-600">{rating}</span>
 
       <div className="mt-4 text-gray-500 sm:pr-8">
@@ -35,14 +35,14 @@ const Card = ({
         <p className="mt-2 hidden text-sm sm:block">
           <Link className="text-blue-600" target="_blank" href={URL}>
             Yelp Business Page
-          </Link>{' '}
+          </Link>
         </p>
-        <div class="mt-4 flex flex-wrap gap-1">
-          <span class="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{reviewCount} reviews</span>
-          <span class="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{Math.round(distance)} meters away</span>
+        <div className="mt-4 flex flex-wrap gap-1">
+          <span className="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{reviewCount} reviews</span>
+          <span className="whitespace-nowrap rounded-full bg-blue-100 px-2.5 py-0.5 text-xs text-blue-600">{Math.round(distance)} meters away</span>
         </div>
       </div>
-    </a>
+    </div>
   )
 }
 
