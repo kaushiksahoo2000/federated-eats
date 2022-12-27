@@ -44,7 +44,8 @@ const Home: NextPage = () => {
   let loadingText = '...loading'
   if (validLocation && error) {
     console.log('error: ', `${latitude},${longitude}`, { error })
-    loadingText = "Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7"
+    loadingText =
+      "Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7, please refresh the page again 🥲"
   }
 
   return (
