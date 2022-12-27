@@ -14,6 +14,11 @@ import (
 
 // Location is the resolver for the location field.
 func (r *queryResolver) Location(ctx context.Context, id string) (*model.Location, error) {
+	// hacky validation
+	if id == "" {
+		log.Println("empty id")
+		return nil, nil
+	}
 	resp, err := r.RestyClient.R().
 		SetQueryParams(map[string]string{
 			"access_key": r.PositionstackAccessKey,
