@@ -38,9 +38,12 @@ const Home: NextPage = () => {
       setLongitude(position?.coords?.longitude)
     })
   }, [])
-
-  const { data } = useQuery(QUERY, { variables: { locationId: `${latitude},${longitude}` } })
-  // console.log({ data })
+  const { data, error } = useQuery(QUERY, { variables: { locationId: `${latitude},${longitude}` } })
+  let loadingText = '...loading'
+  if (latitude && longitude && error) {
+    console.log('error: ', `${latitude},${longitude}`, { error })
+    loadingText = "Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7"
+  }
   return (
     <>
       <section className="text-gray-700">
@@ -60,11 +63,11 @@ const Home: NextPage = () => {
           <div className="space-y-10">
             <div>
               <h3 className="text-lg font-medium sm:text-lg">Some current location information via the supergraph 📍:</h3>
-              <p className="mt-4 text-sm text-gray-500">continent - {data?.location?.continent ? data?.location?.continent : 'loading...'} </p>
-              <p className="mt-4 text-sm text-gray-500">county - {data?.location?.county ? data?.location?.county : 'loading...'} </p>
-              <p className="mt-4 text-sm text-gray-500">label - {data?.location?.label ? data?.location?.label : 'loading...'} </p>
-              <p className="mt-4 text-sm text-gray-500">latitude - {data?.location?.latitude ? data?.location?.latitude : 'loading...'} </p>
-              <p className="mt-4 text-sm text-gray-500">longitude - {data?.location?.longitude ? data?.location?.longitude : 'loading...'} </p>
+              <p className="mt-4 text-sm text-gray-500">continent - {data?.location?.continent ? data?.location?.continent : loadingText} </p>
+              <p className="mt-4 text-sm text-gray-500">county - {data?.location?.county ? data?.location?.county : loadingText} </p>
+              <p className="mt-4 text-sm text-gray-500">label - {data?.location?.label ? data?.location?.label : loadingText} </p>
+              <p className="mt-4 text-sm text-gray-500">latitude - {data?.location?.latitude ? data?.location?.latitude : loadingText} </p>
+              <p className="mt-4 text-sm text-gray-500">longitude - {data?.location?.longitude ? data?.location?.longitude : loadingText} </p>
             </div>
             <h3 className="text-lg font-medium sm:text-lg">Some food in the area via the supergraph and @defer 🍟:</h3>
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
@@ -82,7 +85,7 @@ const Home: NextPage = () => {
                       />
                     ),
                   )
-                : 'loading...'}
+                : loadingText}
             </div>
           </div>
         </div>

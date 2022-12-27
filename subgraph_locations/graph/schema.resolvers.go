@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"subgraph_locations/graph/generated"
 	"subgraph_locations/graph/model"
@@ -34,8 +35,13 @@ func (r *queryResolver) Location(ctx context.Context, id string) (*model.Locatio
 		log.Printf("ERROR: fail to unmarshal json, %s", err.Error())
 		return nil, jsonErr
 	}
+	log.Printf("INFO: jsonMap:, %v", jsonMap)
 	jsonData := jsonMap["data"].([]interface{})
-	locationData := jsonData[0].(map[string]interface{})
+	locationData, ok := jsonData[0].(map[string]interface{})
+	if !ok {
+		log.Printf("ERROR: failed to cast location data, %s", "Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7")
+		return nil, errors.New("error: Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7")
+	}
 
 	latitude := locationData["latitude"].(float64)
 	longitude := locationData["longitude"].(float64)

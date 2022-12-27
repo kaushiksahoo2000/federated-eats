@@ -40,7 +40,7 @@ func main() {
 
 	router := chi.NewRouter()
 	router.Use(cors.New(cors.Options{
-		AllowedOrigins:   []string{defaultUrl, "https://studio.apollographql.com"},
+		AllowedOrigins:   []string{defaultUrl, "http://localhost:3001", "https://studio.apollographql.com"},
 		AllowCredentials: true,
 		Debug:            false,
 	}).Handler)
