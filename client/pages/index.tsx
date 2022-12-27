@@ -38,12 +38,15 @@ const Home: NextPage = () => {
       setLongitude(position?.coords?.longitude)
     })
   }, [])
-  const { data, error } = useQuery(QUERY, { variables: { locationId: `${latitude},${longitude}` } })
+
+  const validLocation = latitude && longitude
+  const { data, error } = useQuery(QUERY, { skip: !validLocation, variables: { locationId: `${latitude},${longitude}` } })
   let loadingText = '...loading'
-  if (latitude && longitude && error) {
+  if (validLocation && error) {
     console.log('error: ', `${latitude},${longitude}`, { error })
     loadingText = "Sorry sometimes we can't rely on positionstack: https://github.com/apilayer/positionstack/issues/7"
   }
+
   return (
     <>
       <section className="text-gray-700">
